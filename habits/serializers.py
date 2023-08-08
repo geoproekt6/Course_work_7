@@ -3,7 +3,7 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework import validators
 
 from habits.models import Habbits
-from users.validators import TogetherValidators, TimeValidators
+from users.validators import TogetherValidators, TimeValidators, IsNice
 
 
 class HabbitsCreateSerializer(ModelSerializer):
@@ -15,6 +15,7 @@ class HabbitsCreateSerializer(ModelSerializer):
         validators = [
             TogetherValidators(),
             TimeValidators(),
+            IsNice()
         ]
 
 

@@ -2,6 +2,8 @@ from datetime import datetime, time, timedelta
 
 from rest_framework.serializers import ValidationError
 
+from habits.models import Habbits
+
 
 class TogetherValidators:
 
@@ -25,3 +27,12 @@ class TimeValidators:
                 'Время выполнения должно быть не больше 120 секунд'
             )
 
+
+
+class IsNice:
+
+    def __call__(self, value):
+        if value['relted_habbit'].good_habit_sign is False:
+            raise ValidationError(
+                "Приятной привычкой может быть только приятная привычка"
+            )
