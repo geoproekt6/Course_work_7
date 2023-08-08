@@ -1,9 +1,11 @@
 from django.shortcuts import render
+from rest_framework import status
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from habits.models import Habbits
-from habits.serializers import HabbitsCreateSerializer
+from habits.serializers import HabbitsCreateSerializer, HabbitslistSerializer
 
 
 # Create your views here.
@@ -14,11 +16,16 @@ class HabbitsCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        print(request)
+        datas = request.data
+        datas['user'] = self.request.user.id
+        serializer = self.serializer_class(data=datas)
 
-        new_habbit = Habbits.objects.create()
-
-        return new_habbit
+        if serializer.is_valid():
+            habbit = serializer.save()
+            habbit.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     class Meta:
         model = Habbits
@@ -28,7 +35,7 @@ class HabbitsCreateAPIView(CreateAPIView):
 class HabbitsListAPIView(ListAPIView):
     """"""
     queryset = Habbits.objects.all()
-    serializer_class = ...
+    serializer_class = HabbitslistSerializer
     permission_classes = [IsAuthenticated]
 
     class Meta:
