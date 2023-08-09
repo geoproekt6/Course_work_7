@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from habits.models import Habbits
 from habits.pagination import MabbitsPaginator
+from habits.permissions import OwnerOrSuperUser
 from habits.serializers import HabbitsCreateSerializer, HabbitslistSerializer
 
 
@@ -35,10 +36,14 @@ class HabbitsCreateAPIView(CreateAPIView):
 
 class HabbitsListAPIView(ListAPIView):
     """Список привычек"""
-    queryset = Habbits.objects.all()
     serializer_class = HabbitslistSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = MabbitsPaginator
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Habbits.objects.all()
+        return Habbits.objects.filter(user=self.request.user)
 
     class Meta:
         model = Habbits
@@ -47,9 +52,14 @@ class HabbitsListAPIView(ListAPIView):
 
 class HabbitsDetailAPIView(RetrieveAPIView):
     """"""
-    queryset = Habbits.objects.all()
-    serializer_class = ...
+    # queryset = Habbits.objects.all()
+    serializer_class = HabbitslistSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Habbits.objects.all()
+        return Habbits.objects.filter(user=self.request.user)
 
     class Meta:
         model = Habbits
