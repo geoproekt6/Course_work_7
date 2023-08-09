@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from habits.models import Habbits
+from habits.pagination import MabbitsPaginator
 from habits.serializers import HabbitsCreateSerializer, HabbitslistSerializer
 
 
@@ -33,10 +34,11 @@ class HabbitsCreateAPIView(CreateAPIView):
 
 
 class HabbitsListAPIView(ListAPIView):
-    """"""
+    """Список привычек"""
     queryset = Habbits.objects.all()
     serializer_class = HabbitslistSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = MabbitsPaginator
 
     class Meta:
         model = Habbits
@@ -69,6 +71,18 @@ class HabbitsDeleteAPIView(DestroyAPIView):
     """"""
     queryset = Habbits.objects.all()
     permission_classes = [IsAuthenticated]
+
+    class Meta:
+        model = Habbits
+        fields = '__all__'
+
+
+class HabbitsPublicListAPIView(ListAPIView):
+    """Список публичных привычек"""
+    queryset = Habbits.objects.filter(is_public=False)
+    serializer_class = HabbitslistSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = MabbitsPaginator
 
     class Meta:
         model = Habbits
