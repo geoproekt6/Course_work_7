@@ -23,6 +23,12 @@ class HabbitsCreateSerializer(ModelSerializer):
 class HabbitslistSerializer(ModelSerializer):
     """"""
     user = SerializerMethodField()
+    relted_habbit = SerializerMethodField()
+
+    @staticmethod
+    def get_relted_habbit(instance):
+        nice_habbit = Habbits.objects.get(id=instance.relted_habbit.id)
+        return nice_habbit.action
 
     @staticmethod
     def get_user(instance):

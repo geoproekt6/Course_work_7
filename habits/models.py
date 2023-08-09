@@ -21,7 +21,7 @@ class Habbits(models.Model):
     periodicity = models.IntegerField(verbose_name='периодичность')
     reward = models.CharField(max_length=127, verbose_name='вознаграждение', **NULLABLE)
     execution_time = models.TimeField(default='00:02', verbose_name='время на выполнение')
-    is_public = models.BooleanField(default=True, verbose_name='Признак публичности')
+    is_public = models.BooleanField(default=False, verbose_name='Признак публичности')
 
     def __str__(self):
         return f'{self.user}, {self.place}'

@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from habits.models import Habbits
 from habits.pagination import MabbitsPaginator
+from habits.permissions import OwnerOrSuperUser
 from habits.serializers import HabbitsCreateSerializer, HabbitslistSerializer
 
 
@@ -34,11 +35,15 @@ class HabbitsCreateAPIView(CreateAPIView):
 
 
 class HabbitsListAPIView(ListAPIView):
-    """"""
-    queryset = Habbits.objects.all()
+    """Список привычек"""
     serializer_class = HabbitslistSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = MabbitsPaginator
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Habbits.objects.all()
+        return Habbits.objects.filter(user=self.request.user)
 
     class Meta:
         model = Habbits
@@ -47,9 +52,14 @@ class HabbitsListAPIView(ListAPIView):
 
 class HabbitsDetailAPIView(RetrieveAPIView):
     """"""
-    queryset = Habbits.objects.all()
-    serializer_class = ...
+    # queryset = Habbits.objects.all()
+    serializer_class = HabbitslistSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Habbits.objects.all()
+        return Habbits.objects.filter(user=self.request.user)
 
     class Meta:
         model = Habbits
@@ -75,3 +85,16 @@ class HabbitsDeleteAPIView(DestroyAPIView):
     class Meta:
         model = Habbits
         fields = '__all__'
+
+
+class HabbitsPublicListAPIView(ListAPIView):
+    """Список публичных привычек"""
+    queryset = Habbits.objects.filter(is_public=False)
+    serializer_class = HabbitslistSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = MabbitsPaginator
+
+    class Meta:
+        model = Habbits
+        fields = '__all__'
+
