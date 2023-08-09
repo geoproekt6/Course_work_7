@@ -97,3 +97,4 @@ class HabbitsPublicListAPIView(ListAPIView):
     class Meta:
         model = Habbits
         fields = '__all__'
+
