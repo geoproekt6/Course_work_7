@@ -7,10 +7,9 @@ from rest_framework.response import Response
 from habits.models import Habbits
 from habits.pagination import MabbitsPaginator
 from habits.permissions import OwnerOrSuperUser
-from habits.serializers import HabbitsCreateSerializer, HabbitslistSerializer
+from habits.serializers import HabbitsCreateSerializer, HabbitsListSerializer, HabbitsDetailSerializer
+from telegramm.bot import TeleBotApi
 
-
-# Create your views here.
 
 class HabbitsCreateAPIView(CreateAPIView):
     """"""
@@ -36,7 +35,7 @@ class HabbitsCreateAPIView(CreateAPIView):
 
 class HabbitsListAPIView(ListAPIView):
     """Список привычек"""
-    serializer_class = HabbitslistSerializer
+    serializer_class = HabbitsListSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = MabbitsPaginator
 
@@ -52,8 +51,7 @@ class HabbitsListAPIView(ListAPIView):
 
 class HabbitsDetailAPIView(RetrieveAPIView):
     """"""
-    # queryset = Habbits.objects.all()
-    serializer_class = HabbitslistSerializer
+    serializer_class = HabbitsDetailSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -68,9 +66,13 @@ class HabbitsDetailAPIView(RetrieveAPIView):
 
 class HabbitsUpdatelAPIView(UpdateAPIView):
     """"""
-    queryset = Habbits.objects.all()
-    serializer_class = ...
+    serializer_class = HabbitsDetailSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Habbits.objects.all()
+        return Habbits.objects.filter(user=self.request.user)
 
     class Meta:
         model = Habbits
@@ -79,8 +81,12 @@ class HabbitsUpdatelAPIView(UpdateAPIView):
 
 class HabbitsDeleteAPIView(DestroyAPIView):
     """"""
-    queryset = Habbits.objects.all()
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Habbits.objects.all()
+        return Habbits.objects.filter(user=self.request.user)
 
     class Meta:
         model = Habbits
@@ -90,7 +96,7 @@ class HabbitsDeleteAPIView(DestroyAPIView):
 class HabbitsPublicListAPIView(ListAPIView):
     """Список публичных привычек"""
     queryset = Habbits.objects.filter(is_public=False)
-    serializer_class = HabbitslistSerializer
+    serializer_class = HabbitsListSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = MabbitsPaginator
 
