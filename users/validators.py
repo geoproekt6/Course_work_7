@@ -1,8 +1,5 @@
-from datetime import datetime, time, timedelta
-
+from datetime import timedelta
 from rest_framework.serializers import ValidationError
-
-from habits.models import Habbits
 
 
 class TogetherValidators:

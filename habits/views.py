@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -6,9 +5,7 @@ from rest_framework.response import Response
 
 from habits.models import Habbits
 from habits.pagination import MabbitsPaginator
-from habits.permissions import OwnerOrSuperUser
 from habits.serializers import HabbitsCreateSerializer, HabbitsListSerializer, HabbitsDetailSerializer
-from telegramm.bot import TeleBotApi
 
 
 class HabbitsCreateAPIView(CreateAPIView):
@@ -103,4 +100,3 @@ class HabbitsPublicListAPIView(ListAPIView):
     class Meta:
         model = Habbits
         fields = '__all__'
-

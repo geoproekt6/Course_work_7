@@ -28,8 +28,10 @@ class Migration(migrations.Migration):
                 ('reward', models.CharField(max_length=127, verbose_name='вознаграждение')),
                 ('execution_time', models.TimeField(default='00:02', verbose_name='время на выполнение')),
                 ('is_public', models.BooleanField(default=True, verbose_name='Признак публичности')),
-                ('relted_habbit', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='habits.habbits', verbose_name='связанная привычка')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='создатель привычки')),
+                ('relted_habbit', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                                    to='habits.habbits', verbose_name='связанная привычка')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL,
+                                           verbose_name='создатель привычки')),
             ],
             options={
                 'verbose_name': 'привычка',
