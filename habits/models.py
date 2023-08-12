@@ -1,13 +1,9 @@
 from django.conf import settings
 from django.db import models
-from django.utils.timezone import now
-
 from users.models import User, NULLABLE
 
 
-# Create your models here.
 class Habbits(models.Model):
-
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -17,7 +13,12 @@ class Habbits(models.Model):
     times = models.TimeField(default='00:00', verbose_name='время начала выполнения')
     action = models.CharField(max_length=127, verbose_name='действие')
     good_habit_sign = models.BooleanField(default=False, verbose_name='признак приятной привычки')
-    relted_habbit = models.ForeignKey('self', on_delete=models.SET_NULL, **NULLABLE, verbose_name='связанная привычка')
+    relted_habbit = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        **NULLABLE,
+        verbose_name='связанная привычка'
+    )
     periodicity = models.IntegerField(verbose_name='периодичность')
     reward = models.CharField(max_length=127, verbose_name='вознаграждение', **NULLABLE)
     execution_time = models.TimeField(default='00:02', verbose_name='время на выполнение')
@@ -30,5 +31,3 @@ class Habbits(models.Model):
         verbose_name = 'привычка'
         verbose_name_plural = 'привычки'
         ordering = ['times']
-
-

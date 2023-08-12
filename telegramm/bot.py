@@ -23,5 +23,3 @@ class TeleBotApi:
         }
         responce = requests.get(cls.URL + '/sendMessage', data)
         print(responce.json)
-
-
